@@ -134,7 +134,7 @@ def load_census_data_uci(local_path: str=None,
   data_train.drop("instance_weight", axis=1, inplace=True)
   data_test_orig.drop("instance_weight", axis=1, inplace=True)
 
-  # split original test data into training and validation as mentioned 
-  # in the paper
+  # split original test data into training and validation in the proportion 1:1
+  # as mentioned in the paper
   data_val, data_test = train_test_split(data_test_orig, test_size=0.5)
   return data_train, data_val, data_test
