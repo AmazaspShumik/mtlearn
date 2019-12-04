@@ -88,8 +88,8 @@ class MixtureOfExpertsLayer(Layer):
 
   Parameters
   ----------
-  experts: List of Layers
-      List of experts, each expert is expected to be a instance of Layer class.
+  expert_layers: List of Layers
+      List of experts, each expert is expected to be an instance of Layer class.
 
   add_dropout: bool, optional (Default=False)
       Adds dropout after softmax layer, helps to avoid collapse of the experts 
