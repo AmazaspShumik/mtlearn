@@ -122,7 +122,14 @@ class MixtureOfExpertsLayer(Layer):
             batch_input_shape
             ) -> None:
     """
-    Builds 
+    Builds softmax layer that estimates probability of expert utilization 
+    in every given region and then builds expert dropout layer with 
+    renormalization.
+
+    Parameters
+    ----------
+    batch_input_shape: tuple
+      Shape of the inputs
     """
     self.expert_probs = Dense(self.n_experts,"softmax",**self.kwargs)
     if self.add_dropout:
