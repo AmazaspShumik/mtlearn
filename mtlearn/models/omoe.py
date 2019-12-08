@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import
+
 from typing import List, Union
 
-from mmoe import MultiGateMixtureOfExperts
-from layers import MixtureOfExpertsLayer
+from .mmoe import MultiGateMixtureOfExperts
+from ..layers import MixtureOfExpertsLayer
 
 import tensorflow as tf
 import numpy as np
