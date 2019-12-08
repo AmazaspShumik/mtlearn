@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from typing import List, Dict, Tuple, Union
+from typing import Tuple, Union, Dict, List
 
-import numpy as np
 import tensorflow as tf
-from tf.keras.layers import Layer, Dense, Dropout
-
+import numpy as np
+from tf.keras.layers import Layer, Dropout, Dense
 
 
 class ExpertUtilizationDropout(Layer):
@@ -89,7 +88,7 @@ class MixtureOfExpertsLayer(Layer):
   Parameters
   ----------
   expert_layers: List of Layers
-      List of experts, each expert is expected to be an instance of Layer class.
+      List of experts, each expert is expected to be a instance of Layer class.
 
   add_dropout: bool, optional (Default=False)
       Adds dropout after softmax layer, helps to avoid collapse of the experts 
@@ -131,7 +130,7 @@ class MixtureOfExpertsLayer(Layer):
     batch_input_shape: tuple
       Shape of the inputs
     """
-    self.expert_probs = Dense(self.n_experts,"softmax",**self.kwargs)
+    self.expert_probs = Dense(self.n_experts, "softmax", **self.kwargs)
     if self.add_dropout:
       self.drop_expert_layer = ExpertUtilizationDropout(self.dropout_rate)
     super().build(batch_input_shape) 
