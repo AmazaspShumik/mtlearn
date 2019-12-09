@@ -115,7 +115,8 @@ class PreprocessingLayer(Layer):
           if self.one_hot[col] > 2:
             cat_representation = tf.one_hot(cat_feature, self.one_hot[col])
           else:
-            # if feature is binary, then no need to use use single column
+            # if feature is binary, then no need to use use two columns
+            # in one-hot encoding.
             cat_representation = tf.cast(cat_feature, dtype=tf.float32)
         all_categorical.append(cat_representation)
       else:
