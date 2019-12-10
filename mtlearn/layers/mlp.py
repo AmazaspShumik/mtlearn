@@ -73,6 +73,6 @@ class MLP(Layer):
     """ Get MLP configuration """
     base_config = super().base_config()
     return {**base_config,
-            "layers": [[tf.keras.layers.serialize(layer) for 
-                        layer in self.expert_layers]]
+            "layers": [tf.keras.layers.serialize(layer) for 
+                       layer in self.expert_layers]
            }
