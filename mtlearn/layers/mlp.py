@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union, List
+from typing import Dict, List
 
 import numpy as np
 import tensorflow as tf
-from tf.keras.layers import Layer, Dense
+from tensorflow.keras.layers import Layer, Dense
 
 
 class MLP(Layer):
   """
-  Standard neural network with dense layers 
+  Standard neural network with dense layers
 
   Parameters
   ----------
@@ -20,20 +20,21 @@ class MLP(Layer):
     Activation function for hidden layers
 
   output_layer_activation: str
-    Activation function for the output layer  
+    Activation function for the output layer
 
   layers: List of Layer instances
-    List of layers (can be used in case you create layers outside and 
-    just want to make a compsite layer out of them). If provided then all other 
+    List of layers (can be used in case you create layers outside and
+    just want to make a compsite layer out of them). If provided then all other
     inputs are ignored.
   """
-  def __init__(self, 
-               architecture: Tuple[int]=(64, 32, 1),
+
+  def __init__(self,
+               architecture: List[int],
                hidden_layer_activation: str="elu",
                output_layer_activation: str=None,
-               layers: List[Layer]=None,
+               layers: Layer=None,
                **kwargs
-               ) -> None:
+               ):
     super().__init__(**kwargs)
     self.layers = []
     if layers:
@@ -43,14 +44,17 @@ class MLP(Layer):
         output_layer_activation = hidden_layer_activation
       # create hidden layers
       for hidden_units in architecture[:-1]:
-        self.layers.append( Dense(hidden_units, hidden_layer_activation) )
+        self.layers.append(Dense(hidden_units, hidden_layer_activation))
       # create output layer
       output_dim = architecture[-1]
       self.layers.append(Dense(output_dim, output_layer_activation))
-    
+    self.architecture = architecture
+    self.hidden_layer_activation = hidden_layer_activation
+    self.output_layer_activation = output_layer_activation
+
   def call(self,
-           inputs: Union[np.array, tf.Tensor]
-           ) -> tf.Tensor:
+           inputs
+          ):
     """
     Forward pass of the MLP
 
@@ -61,7 +65,7 @@ class MLP(Layer):
 
     Returns
     -------
-    outputs: list of tf.Tensor
+    outputs: tf.Tensor
       Outputs of forward pass
     """
     x = inputs
@@ -69,10 +73,12 @@ class MLP(Layer):
       x = layer(x)
     return x
 
-  def get_config(self):
+  def get_config(self) -> Dict:
     """ Get MLP configuration """
-    base_config = super().base_config()
+    base_config = super().get_config()
     return {**base_config,
-            "layers": [tf.keras.layers.serialize(layer) for 
-                       layer in self.expert_layers]
-           }
+            "layers": [tf.keras.layers.serialize(l) for l in self.layers],
+            "architecture": self.architecture,
+            "hidden_layer_activation": self.hidden_layer_activation,
+            "output_layer_activation": self.output_layer_activation
+            }

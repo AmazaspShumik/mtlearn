@@ -11,6 +11,7 @@ def load_census_data_uci(local_path: str,
                          columns: Tuple[str],
                          uci_train_link_path: str,
                          uci_test_link_path: str,
+                         seed: int=0
                          ) -> Tuple[pd.DataFrame]:
   """ 
   Checks whether data are in path directory or in current directory if path is 
@@ -38,6 +39,9 @@ def load_census_data_uci(local_path: str,
 
   columns: list of str
     Names of the columns in dataset
+
+  seed: int
+    Seed for the random train test split
 
   Returns
   -------
@@ -75,6 +79,8 @@ def load_census_data_uci(local_path: str,
                                   index_col=False, 
                                   names=columns)
 
+  assert list(data_train.columns) == list(data_test_orig.columns)
+
   # write loaded data to local path if they are not there already
   if write_data_locally:
     if train_file not in os.listdir(local_path):
@@ -89,5 +95,5 @@ def load_census_data_uci(local_path: str,
 
   # split original test data into training and validation as mentioned 
   # in the paper
-  data_val, data_test = train_test_split(data_test_orig, test_size=0.5)
+  data_val, data_test = train_test_split(data_test_orig, test_size=0.5, random_state=seed)
   return data_train, data_val, data_test
