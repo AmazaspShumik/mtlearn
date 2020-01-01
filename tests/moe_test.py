@@ -1,10 +1,12 @@
 from typing import List
 from unittest import TestCase
+import os
+import shutil
 
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Dense
-from tensorflow.keras.models import Model
+from tensorflow.keras.models import Model, load_model
 
 from mtlearn.layers import MixtureOfExpertsLayer
 from tests import BaseSpecificationMTL
@@ -77,6 +79,30 @@ class TestMOE(TestCase, BaseSpecificationMTL):
             preds = model.predict(self.x)
             self.assertTrue(preds.shape[0] == self.y_one.shape[0])
             self.assertTrue(np.mean(np.square(preds[:, 0] - self.y_one[:, 0])) < 1e-1)
+
+    def test_save_load_mtl(self) -> None:
+        """
+        Tests saving and loading
+        """
+        # create directory for saving model
+        if not os.path.isdir(self.test_dir):
+            os.mkdir(self.test_dir)
+
+        # load and reload
+        for model in self.models:
+            preds = model.predict(self.x)
+            saved_model_path = os.path.join(self.test_dir, "test_model_saving")
+            model.save(saved_model_path)
+            reloaded_model = load_model(saved_model_path)
+            preds_reloaded = reloaded_model.predict(self.x)
+
+        # delete temporary directory
+        if os.path.isdir(self.test_dir):
+            shutil.rmtree(self.test_dir)
+
+        # check equality of predictions from original and reloaded models
+        self.assertTrue(np.all(preds_reloaded == preds))
+
 
 if __name__=="__main__":
     test_moe = TestMOE()

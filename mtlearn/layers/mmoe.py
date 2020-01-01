@@ -1,11 +1,10 @@
 from typing import List, Dict
 
-import tensorflow as tf
-from tensorflow.keras.layers import Layer
 from tensorflow.keras import layers
+from tensorflow.keras.layers import Layer
 
-from mtlearn.utils import has_arg
 from mtlearn.layers import MixtureOfExpertsLayer
+from mtlearn.utils import has_arg
 
 
 class MultiGateMixtureOfExperts(Layer):
@@ -80,10 +79,7 @@ class MultiGateMixtureOfExperts(Layer):
                                                     self.base_expert_prob_layer))
         return moe_layers
 
-    def call(self,
-             inputs,
-             training
-             ):
+    def call(self, inputs, training):
         """
         Forward pass of the Multi-Gate Mixture of Experts model.
 

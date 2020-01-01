@@ -31,7 +31,7 @@ class CrossStitchBlock(Layer):
         normalizer = tf.reduce_sum(self.cross_stitch_kernel,
                                    keepdims=True,
                                    axis=0)
-        self.cross_stitch_unit.assign(self.cross_stitch_unit / normalizer)
+        self.cross_stitch_kernel.assign(self.cross_stitch_kernel / normalizer)
 
     def call(self, inputs):
         """
@@ -44,7 +44,7 @@ class CrossStitchBlock(Layer):
         """
         # vectorized cross-stitch unit operation
         x = tf.concat([tf.expand_dims(e, axis=-1) for e in inputs], axis=-1)
-        stitched_output = tf.matmul(x, self.cross_stitch_unit)
+        stitched_output = tf.matmul(x, self.cross_stitch_kernel)
 
         # split result into tensors corresponding to specific tasks and return
         # Note on implementation: applying tf.squeeze(*) on tensor of shape (None,x,1)
