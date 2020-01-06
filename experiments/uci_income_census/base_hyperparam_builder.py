@@ -5,25 +5,15 @@ from experiments.uci_income_census import PreprocessingLayer
 from typing import List, Dict
 
 
-def build_optimizer(hp: HyperParameters):
-    """ Helper method that defines hyperparameter optimization for optimizer"""
-    optimizer = hp.Choice(name="optimizer",
-                          values=["adam","sgd","rms"],
-                          default="adam")
-    learning_rate = hp.Float(name="learning_rate",
-                             min_value=1e-4,
-                             max_value=5e-3,
-                             sampling="log",
-                             default=1e-3)
-    # probably could use enums here
-    if optimizer == "adam":
-        return Adam(learning_rate=learning_rate)
-    elif optimizer == "sgd":
-        return SGD(learning_rate=learning_rate)
-    elif optimizer == "rms":
-        return RMSprop(learning_rate=learning_rate)
+def build_activation_functions(hp: HyperParameters,
+                               restricted_hyperparameter_search: bool):
+    """ Helper method for setting activation functions """
+    if restricted_hyperparameter_search:
+        hp.Fixed("hidden_layer_activation","relu")
     else:
-        raise NotImplementedError()
+        hp.Choice("hidden_layer_activation", ["relu","elu","selu"])
+    hp.Fixed("output_layer_activation","sigmoid")
+    return hp
 
 
 def build_task_towers(hp: HyperParameters,
@@ -68,7 +58,6 @@ def build_preprocessing_layer_uci_income(hp: HyperParameters,
     return PreprocessingLayer(all_columns,
                               cat_features_dim,
                               feature_sparsity_threshold=feature_sparsity_threshold)
-
 
 def build_experts(hp: HyperParameters):
     """ Helper method to build expert networks for OMOE and MMOE"""
