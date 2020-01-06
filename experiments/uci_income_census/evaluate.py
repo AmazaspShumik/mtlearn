@@ -3,8 +3,10 @@ from typing import Tuple
 import numpy as np
 from sklearn.metrics import roc_auc_score
 from tensorflow.keras.models import Model, load_model
+import os
 
-from experiments.uci_income_census_mmoe.data_loader_preprocessor import DataLoaderPreprocessorCensusUCI
+
+from experiments.uci_income_census.utils import DataLoaderPreprocessorCensusUCI
 
 SEED = 1
 
@@ -39,16 +41,15 @@ features_group_one_test = np.array(data_test_one.values, dtype=np.float32)
 features_group_one_val = np.array(data_val_one.values, dtype=np.float32)
 
 # evaluate with MMOE
-mmoe_model = load_model("mmoe_marital_income")
-omoe_model = load_model("omoe_marital_income")
-models = [mmoe_model, omoe_model]
-model_names = ["Multi-Gate Mixture of Experts",
-               "One-Gate Mixture of Experts"]
+mmoe_model = load_model(os.path.join(os.getcwd(),"best_models_paper_hyperparams","mmoe"))
+#omoe_model = load_model("omoe_marital_income")
+models = [mmoe_model]
+model_names = ["Multi-Gate Mixture of Experts", "One-Gate Mixture of Experts"]
 
 print(" \n Test set results")
 for model, model_name in zip(models, model_names):
-    group_one_auc_marital_test, group_one_auc_income_test = evaluate(y_marital_test_one,
-                                                                     y_income_test,
+    group_one_auc_marital_test, group_one_auc_income_test = evaluate(y_income_test,
+                                                                     y_marital_test_one,
                                                                      features_group_one_test,
                                                                      model
                                                                      )
@@ -58,8 +59,8 @@ for model, model_name in zip(models, model_names):
 
 print(" \n Validation set results")
 for model, model_name in zip(models, model_names):
-    group_one_auc_marital_val, group_one_auc_income_val = evaluate(y_marital_val_one,
-                                                                   y_income_val,
+    group_one_auc_marital_val, group_one_auc_income_val = evaluate(y_income_val,
+                                                                   y_marital_val_one,
                                                                    features_group_one_val,
                                                                    model
                                                                    )

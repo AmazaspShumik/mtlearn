@@ -179,7 +179,7 @@ def build_hyper_l2_constrained(hp: HyperParameters,
         l2_regularizer = hp.Float("l2_regularizer_layer_{0}".format(i), min_value=1e-2, max_value=1e+2)
         constrained_l2 = ConstrainedMTL(mtl_layers, l1_regularizer=0., l2_regualrizer=l2_regularizer)
         x = constrained_l2(x)
-    output_layers = [Dense(1, hp['output_layer_activation'])(x) for _ in range(n_tasks)]
+    output_layers = [Dense(1, hp['output_layer_activation'])(x[i]) for i in range(n_tasks)]
     model = Model(inputs=input_layer, outputs=output_layers)
     return model
 
