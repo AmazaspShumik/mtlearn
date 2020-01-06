@@ -48,17 +48,17 @@ class OneGateMixtureOfExperts(MultiGateMixtureOfExperts):
         """Builds Mixture of Experts Layers if they are not provided by the user"""
         return [MixtureOfExpertsLayer(self.expert_layers, self.moe_dropout, self.moe_dropout_rate)]
 
-    def call(self,
-             inputs,
-             training
-             ):
+    def call(self, inputs, training):
         """
-        Forward pass of the model.
+        Forward pass of the One-Gate Mixture of Experts Model
 
         Parameters
         ----------
         inputs: np.array or tf.Tensor
           Input to the model
+
+        training: bool
+          True during training, False otherwise
 
         Returns
         -------
