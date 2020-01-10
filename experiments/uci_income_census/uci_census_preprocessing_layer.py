@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from typing import Dict, Union
+from typing import Dict
 
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Layer, Embedding
 

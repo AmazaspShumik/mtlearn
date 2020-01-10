@@ -76,7 +76,7 @@ class IncomeCensusTuner(kt.Tuner):
             optimizer_name = hp.Fixed("optimizer", "sgd")
 
         # define learning rate and optimizer
-        lr = hp.Float("learning_rate", 1e-4, 1e-2, sampling="log")
+        lr = hp.Float("learning_rate", 5e-4, 5e-3, sampling="linear")
         if optimizer_name == "adam":  # probably could use enums here
             optimizer = Adam(learning_rate=lr)
         elif optimizer_name == "sgd":

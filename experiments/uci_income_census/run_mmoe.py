@@ -48,10 +48,9 @@ if __name__=="__main__":
                                    )
 
     hp_opt = kt.oracles.BayesianOptimization(objective=kt.Objective('auc', 'max'),
-                                             max_trials=50,
-                                             tune_new_entries=True)
+                                             max_trials=20)
     tuner = IncomeCensusTuner(oracle = hp_opt,
-                              hypermodel=hyper_l2_constrained,
+                              hypermodel=hyper_mmoe,
                               directory='results_hpopt_mmoe',
                               project_name='mmoe_uci_census_income')
     tuner.search(train_features = np.array(data_train_one.values, dtype=np.float32),
@@ -60,6 +59,8 @@ if __name__=="__main__":
                  val_features = np.array(data_val_one.values, dtype=np.float32),
                  val_labels_main_task = np.array(y_income_val, dtype=np.float32),
                  val_labels_aux_task = np.array(y_marital_val_one, dtype=np.float32),
-                 epochs=10,
+                 epochs=150,
                  restricted_hyperparameter_search=True)
+
+    tuner.results_summary()
 

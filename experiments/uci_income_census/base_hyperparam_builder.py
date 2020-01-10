@@ -19,9 +19,9 @@ def build_activation_functions(hp: HyperParameters,
 def build_task_towers(hp: HyperParameters,
                       n_tasks: int,
                       min_layers: int=1,
-                      max_layers: int=5,
+                      max_layers: int=3,
                       min_units_per_layer: int=8,
-                      max_units_per_layer: int=40
+                      max_units_per_layer: int=16
                       ):
     """ Helper method to build task specific networks """
     task_towers = []
@@ -45,15 +45,17 @@ def build_task_towers(hp: HyperParameters,
 
 def build_preprocessing_layer_uci_income(hp: HyperParameters,
                                          all_columns: List[str],
-                                         cat_features_dim: Dict[str, int]
+                                         cat_features_dim: Dict[str, int],
+                                         feature_sparsity_min: int=4,
+                                         feature_sparsity_max: int=8
                                          ):
     """
     Helper method that builds preprocesing layer for UCI
     Census Income dataset.
     """
     feature_sparsity_threshold = hp.Int("feature_sparsity",
-                                        min_value=3,
-                                        max_value=10,
+                                        min_value=feature_sparsity_min,
+                                        max_value=feature_sparsity_max,
                                         default=3)
     return PreprocessingLayer(all_columns,
                               cat_features_dim,
@@ -62,10 +64,10 @@ def build_preprocessing_layer_uci_income(hp: HyperParameters,
 def build_experts(hp: HyperParameters):
     """ Helper method to build expert networks for OMOE and MMOE"""
     architecture = []
-    n_experts = hp.Int("n_experts", 4, 10, default=6)
-    n_layers = hp.Int("n_layers_experts", 2, 4, default=2)
+    n_experts = hp.Int("n_experts", 4, 20, default=6)
+    n_layers = hp.Int("n_layers_experts", 1, 3, default=2)
     for i in range(n_layers):
-        n_units = hp.Int("n_units_experts_{0}".format(i), 10, 20)
+        n_units = hp.Int("n_units_experts_{0}".format(i), 32, 64)
         architecture.append( n_units )
     return [MLP(architecture, hp["hidden_layer_activation"]) for _ in range(n_experts)]
 
