@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 from typing import Tuple
 
-from .load_census_data import load_census_data_uci
-from .preprocess_features import preprocess_features
+from experiments.uci_income_census.utils.load_census_data import load_census_data_uci
+from experiments.uci_income_census.utils.preprocess_features import preprocess_features
 
 import numpy as np
 import pandas as pd
@@ -140,9 +140,9 @@ class DataLoaderPreprocessorCensusUCI:
                             ]
         y_marital, y_education = [], []
         for ms, edu in zip(self.marital_stat, self.education):
-            y_marital.append(1 * (ms == "Never married"))
+            y_marital.append(np.array(1 * (ms == "Never married"), dtype=np.float32))
             educated = [1 * (e in college_educated) for e in edu]
-            y_education.append(np.asarray(educated))
+            y_education.append(np.array(educated, dtype=np.float32))
         return self.features, y_marital, y_education, self.cat_features_dim
 
     def get_income_marital_stat_tasks(self):
@@ -157,10 +157,13 @@ class DataLoaderPreprocessorCensusUCI:
         """
         y_marital, y_income = [], []
         for ms, income in zip(self.marital_stat, self.income):
-            y_marital.append(1 * (ms == " Never married"))
-            y_income.append(1 * (income == ' 50000+.'))
+            y_marital.append(np.array(1 * (ms == " Never married"), dtype=np.float32))
+            y_income.append(np.array(1 * (income == ' 50000+.'), dtype=np.float32))
         return self.features, y_marital, y_income, self.cat_features_dim
 
     def get_raw_train_val_test(self):
         """ Get raw data """
         return self.train, self.val, self.test
+
+
+dl = DataLoaderPreprocessorCensusUCI()

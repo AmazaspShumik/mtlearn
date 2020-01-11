@@ -78,8 +78,8 @@ def load_census_data_uci(local_path: str,
                                   header=None, 
                                   index_col=False, 
                                   names=columns)
-
   assert list(data_train.columns) == list(data_test_orig.columns)
+
 
   # write loaded data to local path if they are not there already
   if write_data_locally:

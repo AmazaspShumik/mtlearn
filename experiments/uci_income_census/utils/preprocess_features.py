@@ -57,5 +57,6 @@ def preprocess_features(df_train: pd.DataFrame,
       min_val, max_val = np.min(train_feature), np.max(train_feature)
       scaler = lambda min_x, max_x, x: (x-min_x)/(max_x-min_x)
       for df in all_data:
-        df[col] = scaler(min_val, max_val, df[col].values)
+        feature = scaler(min_val, max_val, df[col].values)
+        df[col] = np.array(feature, dtype=np.float32)
   return all_data, cat_feature_dims
