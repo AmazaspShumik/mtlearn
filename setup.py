@@ -19,7 +19,7 @@ setup(
         'scipy>=0.15.1',
         'scikit-learn>=0.21',
         'tensorflow>=2.0.0-beta1',
-        'keras-tuner>=1.0'],
+        'keras-tuner>=1.0.0'],
     test_suite='tests',
     classifiers=[
         'Programming Language :: Python',
