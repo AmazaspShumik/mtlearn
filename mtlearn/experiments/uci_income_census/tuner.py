@@ -4,7 +4,7 @@ from sklearn.metrics import roc_auc_score
 from tensorflow.keras.optimizers import Adam, SGD, RMSprop
 
 
-class IncomeCensusTuner(kt.Tuner):
+class UCICensusIncomeTuner(kt.Tuner):
     """
     Hyperparameter tuner for Multi-task models on Income Census dataset
     """
