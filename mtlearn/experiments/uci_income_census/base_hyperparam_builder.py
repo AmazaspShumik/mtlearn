@@ -1,27 +1,28 @@
-from tensorflow.keras.optimizers import Adam, SGD, RMSprop
-from kerastuner import HyperParameters
-from mtlearn.layers import MLP
-from experiments.uci_income_census import PreprocessingLayer
 from typing import List, Dict
+
+from kerastuner import HyperParameters
+
+from mtlearn.experiments import PreprocessingLayer
+from mtlearn.layers import MLP
 
 
 def build_activation_functions(hp: HyperParameters,
                                restricted_hyperparameter_search: bool):
     """ Helper method for setting activation functions """
     if restricted_hyperparameter_search:
-        hp.Fixed("hidden_layer_activation","relu")
+        hp.Fixed("hidden_layer_activation", "relu")
     else:
-        hp.Choice("hidden_layer_activation", ["relu","elu","selu"])
-    hp.Fixed("output_layer_activation","sigmoid")
+        hp.Choice("hidden_layer_activation", ["relu", "elu", "selu"])
+    hp.Fixed("output_layer_activation", "sigmoid")
     return hp
 
 
 def build_task_towers(hp: HyperParameters,
                       n_tasks: int,
-                      min_layers: int=1,
-                      max_layers: int=3,
-                      min_units_per_layer: int=8,
-                      max_units_per_layer: int=16
+                      min_layers: int = 1,
+                      max_layers: int = 3,
+                      min_units_per_layer: int = 8,
+                      max_units_per_layer: int = 16
                       ):
     """ Helper method to build task specific networks """
     task_towers = []
@@ -39,15 +40,15 @@ def build_task_towers(hp: HyperParameters,
         task_towers.append(MLP(architecture,
                                hp["hidden_layer_activation"],
                                hp["output_layer_activation"])
-                          )
+                           )
     return task_towers
 
 
 def build_preprocessing_layer_uci_income(hp: HyperParameters,
                                          all_columns: List[str],
                                          cat_features_dim: Dict[str, int],
-                                         feature_sparsity_min: int=4,
-                                         feature_sparsity_max: int=8
+                                         feature_sparsity_min: int = 3,
+                                         feature_sparsity_max: int = 8
                                          ):
     """
     Helper method that builds preprocesing layer for UCI
@@ -61,14 +62,21 @@ def build_preprocessing_layer_uci_income(hp: HyperParameters,
                               cat_features_dim,
                               feature_sparsity_threshold=feature_sparsity_threshold)
 
-def build_experts(hp: HyperParameters):
+
+def build_experts(hp: HyperParameters,
+                  min_experts: int,
+                  max_experts: int,
+                  min_layers_per_expert: int,
+                  max_layers_per_expert: int,
+                  min_units_per_layer: int,
+                  max_units_per_layer: int):
     """ Helper method to build expert networks for OMOE and MMOE"""
     architecture = []
-    n_experts = hp.Int("n_experts", 4, 20, default=6)
-    n_layers = hp.Int("n_layers_experts", 1, 3, default=2)
+    n_experts = hp.Int("n_experts", min_experts, max_experts, default=6)
+    n_layers = hp.Int("n_layers_experts", min_layers_per_expert, max_layers_per_expert, default=2)
     for i in range(n_layers):
-        n_units = hp.Int("n_units_experts_{0}".format(i), 32, 64)
-        architecture.append( n_units )
+        n_units = hp.Int("n_units_experts_{0}".format(i),
+                         min_units_per_layer,
+                         max_units_per_layer)
+        architecture.append(n_units)
     return [MLP(architecture, hp["hidden_layer_activation"]) for _ in range(n_experts)]
-
-

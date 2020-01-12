@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 from typing import Tuple
 
-from experiments.uci_income_census.utils.load_census_data import load_census_data_uci
-from experiments.uci_income_census.utils.preprocess_features import preprocess_features
+from mtlearn.experiments import load_census_data_uci
+from mtlearn.experiments import preprocess_features
 
 import numpy as np
 import pandas as pd
