@@ -5,11 +5,11 @@ from kerastuner import HyperParameters
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.models import Model
 
-from mtlearn.experiments import (build_task_towers,
-                                 build_activation_functions,
-                                 build_experts,
-                                 build_preprocessing_layer_uci_income,
-                                 )
+from mtlearn.experiments.uci_income_census.base_hyperparam_builder import (build_task_towers,
+                                                                           build_activation_functions,
+                                                                           build_experts,
+                                                                           build_preprocessing_layer_uci_income,
+                                                                          )
 from mtlearn.layers import (MultiGateMixtureOfExperts, OneGateMixtureOfExperts,
                             CrossStitchBlock, ConstrainedMTL, MLP)
 

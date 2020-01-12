@@ -2,7 +2,7 @@ from typing import List, Dict
 
 from kerastuner import HyperParameters
 
-from mtlearn.experiments import PreprocessingLayer
+from mtlearn.experiments.uci_income_census import PreprocessingLayer
 from mtlearn.layers import MLP
 
 
