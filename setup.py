@@ -3,8 +3,6 @@
 from setuptools import find_packages
 from setuptools import setup
 
-import mtlearn
-
 setup(
     name='mtlearn',
     version='0.1.0a1',
