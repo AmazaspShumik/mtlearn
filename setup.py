@@ -5,8 +5,6 @@ from __future__ import absolute_import
 from setuptools import find_packages
 from setuptools import setup
 
-import mtlearn
-import mtlearn.experiments
 
 setup(
     name='mtlearn',
