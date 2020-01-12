@@ -18,7 +18,8 @@ setup(
         'numpy>=1.18.0',
         'scipy>=0.15.1',
         'scikit-learn>=0.21',
-        'tensorflow>=2.0.0-beta1'],
+        'tensorflow>=2.0.0-beta1',
+        'keras-tuner>=1.0'],
     test_suite='tests',
     classifiers=[
         'Programming Language :: Python',
