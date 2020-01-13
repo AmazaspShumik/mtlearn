@@ -126,7 +126,7 @@ class UCICensusIncomeTuner(kt.Tuner):
                   y=train_labels,
                   epochs=epochs,
                   batch_size=batch_size,
-                  verbose=0)
+                  verbose=verbose)
 
         # predict on validation set
         preds_main_task, preds_aux_task = model.predict(val_features)
