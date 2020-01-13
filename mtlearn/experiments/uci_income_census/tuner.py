@@ -17,8 +17,13 @@ class UCICensusIncomeTuner(kt.Tuner):
                   val_features,
                   val_labels_main_task,
                   val_labels_aux_task,
-                  epochs=100,
-                  restricted_hyperparameter_search: bool = True
+                  min_batch_size: int = 128,
+                  max_batch_size: int = 2048,
+                  min_learning_rate: float = 1e-4,
+                  max_learning_rate: float = 1e-2,
+                  epochs: int = 100,
+                  restricted_hyperparameter_search: bool = True,
+                  verbose: int = 0
                   ):
         """
         Evaluates set of hyperparameters
@@ -50,6 +55,21 @@ class UCICensusIncomeTuner(kt.Tuner):
         val_labels_aux_task: np.array
             Labels for auxilary task
 
+        min_batch_size: int
+            Minimum possible size of the batch
+
+        max_batch_size: int
+            Maximum possible size of the batch
+
+        min_learning_rate: float
+            Minimum possible value of the learning rate
+
+        max_learning_rate: float
+            Maximum possible value of the learning rate
+
+        epochs: int
+            Number of epochs
+
         restricted_hyperparameter_search: bool
             In section 4.2 of the [1] paper it is mentioned that for MMOE
             they used only Dense layers with ReLU activation units, in
@@ -69,14 +89,19 @@ class UCICensusIncomeTuner(kt.Tuner):
         """
         hp = trial.hyperparameters
         if not restricted_hyperparameter_search:
-            batch_size = hp.Int("batch_size", min_value=32, max_value=2048)
+            batch_size = hp.Int("batch_size",
+                                min_value=min_batch_size,
+                                max_value=max_batch_size)
             optimizer_name = hp.Choice("optimizer", ["sgd", "adam", "rmsprop"])
         else:
             batch_size = hp.Fixed("batch_size", 1024)
             optimizer_name = hp.Fixed("optimizer", "sgd")
 
         # define learning rate and optimizer
-        lr = hp.Float("learning_rate", 1e-4, 1e-2, sampling="linear")
+        lr = hp.Float("learning_rate",
+                      min_learning_rate,
+                      max_learning_rate,
+                      sampling="linear")
         if optimizer_name == "adam":  # probably could use enums here
             optimizer = Adam(learning_rate=lr)
         elif optimizer_name == "sgd":
@@ -97,7 +122,11 @@ class UCICensusIncomeTuner(kt.Tuner):
 
         # train
         train_labels = (train_labels_main_task, train_labels_aux_task)
-        model.fit(x=train_features, y=train_labels, epochs=epochs, batch_size=batch_size)
+        model.fit(x=train_features,
+                  y=train_labels,
+                  epochs=epochs,
+                  batch_size=batch_size,
+                  verbose=0)
 
         # predict on validation set
         preds_main_task, preds_aux_task = model.predict(val_features)
