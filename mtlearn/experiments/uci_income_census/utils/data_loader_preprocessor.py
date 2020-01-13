@@ -164,6 +164,3 @@ class DataLoaderPreprocessorCensusUCI:
     def get_raw_train_val_test(self):
         """ Get raw data """
         return self.train, self.val, self.test
-
-
-dl = DataLoaderPreprocessorCensusUCI()
