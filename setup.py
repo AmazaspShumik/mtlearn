@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
     name='mtlearn',
-    version='0.1.1',
+    version='0.1.2',
     description="multi-task learning package with reproduced papers",
     url='https://github.com/AmazaspShumik/mtlearn',
     author='Amazasp Shaumyan',

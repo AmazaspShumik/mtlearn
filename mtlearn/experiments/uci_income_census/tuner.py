@@ -2,6 +2,8 @@ import kerastuner as kt
 import tensorflow as tf
 from sklearn.metrics import roc_auc_score
 from tensorflow.keras.optimizers import Adam, SGD, RMSprop
+from tensorflow.keras.callbacks import Callback
+from typing import List
 
 
 class UCICensusIncomeTuner(kt.Tuner):
@@ -23,7 +25,8 @@ class UCICensusIncomeTuner(kt.Tuner):
                   max_learning_rate: float = 1e-2,
                   epochs: int = 100,
                   restricted_hyperparameter_search: bool = True,
-                  verbose: int = 0
+                  verbose: int = 0,
+                  user_callbacks: List[Callback] = None
                   ):
         """
         Evaluates set of hyperparameters
@@ -82,6 +85,13 @@ class UCICensusIncomeTuner(kt.Tuner):
              - hidden_layer_activation = relu
              - optimizer = sgd
 
+        verbose: int
+            If 1 print intermediate values of metrics and loss values, 0
+            do not print
+
+        user_callbacks: List of callbacks
+            User defined callbacks
+
         References
         ----------
         [1] Modeling Task Relationships in Multi-task Learning with Multi-gate Mixture-of-Experts
@@ -126,7 +136,8 @@ class UCICensusIncomeTuner(kt.Tuner):
                   y=train_labels,
                   epochs=epochs,
                   batch_size=batch_size,
-                  verbose=verbose)
+                  verbose=verbose,
+                  callbacks=user_callbacks)
 
         # predict on validation set
         preds_main_task, preds_aux_task = model.predict(val_features)
