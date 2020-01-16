@@ -126,7 +126,6 @@ class UCICensusIncomeTuner(kt.Tuner):
         val_data = (val_features, val_labels_main_task, val_labels_aux_task)
         model.compile(loss=['binary_crossentropy', 'binary_crossentropy'],
                       optimizer=optimizer,
-                      validation_data=val_data,
                       metrics=[tf.keras.metrics.AUC()]
                       )
 
@@ -137,6 +136,7 @@ class UCICensusIncomeTuner(kt.Tuner):
                   epochs=epochs,
                   batch_size=batch_size,
                   verbose=verbose,
+                  validation_data=val_data,
                   callbacks=user_callbacks)
 
         # predict on validation set
