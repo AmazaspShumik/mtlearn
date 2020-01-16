@@ -123,7 +123,7 @@ class UCICensusIncomeTuner(kt.Tuner):
         model = self.hypermodel.build(hp)
 
         # compile model
-        val_data = (val_features, val_labels_main_task, val_labels_aux_task)
+        val_data = (val_features, [val_labels_main_task, val_labels_aux_task])
         model.compile(loss=['binary_crossentropy', 'binary_crossentropy'],
                       optimizer=optimizer,
                       metrics=[tf.keras.metrics.AUC()]
