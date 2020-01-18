@@ -210,7 +210,8 @@ def build_hyper_cross_stitched_model(hp: HyperParameters,
                                                                feature_sparsity_max)
     # propagate input through preprocesing layer
     input_layer = Input(shape=(len(all_columns),))
-    x = preprocessing_layer(input_layer)
+    x = [preprocessing_layer(input_layer),
+         preprocessing_layer(input_layer)]
 
     # build cross-stitch network model
     n_layers = hp.Int("number_of_hidden_layers",
