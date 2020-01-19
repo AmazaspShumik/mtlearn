@@ -223,7 +223,7 @@ def build_hyper_cross_stitched_model(hp: HyperParameters,
                          max_value=max_units_per_layer)
         dense_layers_output = [Dense(n_units, hp["hidden_layer_activation"])(x[i]) for i in range(n_tasks)]
         x = CrossStitchBlock()(dense_layers_output)
-    output_layers = [Dense(1, hp['output_layer_activation'])(x) for _ in range(n_tasks)]
+    output_layers = [Dense(1, hp['output_layer_activation'])(x[i]) for i in range(n_tasks)]
     model = Model(inputs=input_layer, outputs=output_layers)
     return model
 
