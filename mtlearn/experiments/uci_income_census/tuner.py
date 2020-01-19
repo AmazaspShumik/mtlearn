@@ -102,7 +102,7 @@ class UCICensusIncomeTuner(kt.Tuner):
             batch_size = hp.Int("batch_size",
                                 min_value=min_batch_size,
                                 max_value=max_batch_size)
-            optimizer_name = hp.Choice("optimizer", ["sgd", "adam", "rmsprop"])
+            optimizer_name = hp.Choice("optimizer", ["sgd", "adam", "rms"])
         else:
             batch_size = hp.Fixed("batch_size", 1024)
             optimizer_name = hp.Fixed("optimizer", "sgd")
