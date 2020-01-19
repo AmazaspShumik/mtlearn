@@ -330,6 +330,8 @@ def build_hyper_mtl_shared_bottom(hp: HyperParameters,
                                   all_columns: List[str],
                                   cat_features_dim: Dict[str, int],
                                   restricted_hyperparameter_search: bool,
+                                  feature_sparsity_min: int = 4,
+                                  feature_sparsity_max: int = 9,
                                   min_shared_layers: int = 2,
                                   max_shared_layers: int = 3,
                                   min_task_layers: int = 1,
@@ -372,7 +374,9 @@ def build_hyper_mtl_shared_bottom(hp: HyperParameters,
     build_activation_functions(hp, restricted_hyperparameter_search)
     preprocessing_layer = build_preprocessing_layer_uci_income(hp,
                                                                all_columns,
-                                                               cat_features_dim)
+                                                               cat_features_dim,
+                                                               feature_sparsity_min,
+                                                               feature_sparsity_max)
     # propagate input through preprocesing layer
     input_layer = Input(shape=(len(all_columns),))
     x = preprocessing_layer(input_layer)
@@ -385,7 +389,7 @@ def build_hyper_mtl_shared_bottom(hp: HyperParameters,
     for i in range(n_layers):
         n_units = hp.Int("n_units_experts_{0}".format(i),
                          min_units_per_layer_shared,
-                         max_units_per_layer_task)
+                         max_units_per_layer_shared)
         architecture.append(n_units)
     shared_layers = MLP(architecture, hp["hidden_layer_activation"])
     shared_layers_output = shared_layers(input_layer)
