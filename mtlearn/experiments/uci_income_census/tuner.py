@@ -118,6 +118,8 @@ class UCICensusIncomeTuner(kt.Tuner):
             optimizer = SGD(learning_rate=lr)
         elif optimizer_name == "rms":
             optimizer = RMSprop(learning_rate=lr)
+        else:
+            raise ValueError("Unknown optimizer_name {0}".format(optimizer_name))
 
         # build model from hyperparameters
         model = self.hypermodel.build(hp)
