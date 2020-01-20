@@ -383,15 +383,15 @@ def build_hyper_mtl_shared_bottom(hp: HyperParameters,
 
     # build shared layers
     architecture = []
-    n_layers = hp.Int("n_layers_experts",
+    n_layers = hp.Int("n_layers_shared",
                       min_shared_layers,
                       max_shared_layers)
     for i in range(n_layers):
-        n_units = hp.Int("n_units_experts_{0}".format(i),
+        n_units = hp.Int("n_units_shared_{0}".format(i),
                          min_units_per_layer_shared,
                          max_units_per_layer_shared)
         architecture.append(n_units)
-    shared_layers = MLP(architecture, hp["hidden_layer_activation"])
+    shared_layers = MLP(architecture, hp["hidden_layer_activation"], hp["hidden_layer_activation"])
     shared_layers_output = shared_layers(input_layer)
 
     # task layers
